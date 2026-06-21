@@ -1,0 +1,10 @@
+fastapi>=0.109.2
+uvicorn>=0.27.1
+mcp>=1.0.0
+langchain-core>=0.1.27
+langchain-community>=0.0.24
+langchain-huggingface>=0.0.1
+langchain-ollama>=0.0.1
+langchain-postgres>=0.0.6
+psycopg2-binary>=2.9.9
+pydantic-settings>=2.2.1

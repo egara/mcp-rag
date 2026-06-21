@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-rag"
+version = "0.1.0"
+description = "MCP Server for RAG Retrieval"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+dependencies = [
+    "fastapi>=0.109.2",
+    "uvicorn>=0.27.1",
+    "mcp>=1.0.0",
+    "langchain-core>=0.1.27",
+    "langchain-community>=0.0.24",
+    "langchain-huggingface>=0.0.1",
+    "langchain-ollama>=0.0.1",
+    "langchain-postgres>=0.0.6",
+    "psycopg2-binary>=2.9.9",
+    "pydantic-settings>=2.2.1"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src"]
