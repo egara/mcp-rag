@@ -1,6 +1,7 @@
 import logging
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
+from langchain_core.embeddings import Embeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_ollama import OllamaEmbeddings
 from langchain_postgres import PGVector
@@ -9,8 +10,13 @@ from src.config import settings
 
 logger = logging.getLogger(__name__)
 
-def get_embedding_function():
-    """Returns the embedding function based on configuration."""
+
+def get_embedding_function() -> Embeddings:
+    """Retrieves the appropriate embedding function based on configuration.
+
+    Returns:
+        Embeddings: An instance of a LangChain embedding model (either HuggingFace or Ollama).
+    """
     model_name = settings.embedding_model
     if "sentence-transformers" in model_name:
         return HuggingFaceEmbeddings(
@@ -24,8 +30,14 @@ def get_embedding_function():
         # base_url="http://host.docker.internal:11434",
     )
 
+
 def get_vector_store() -> PGVector:
-    """Returns the pgvector store instance."""
+    """Initializes and returns the pgvector store instance.
+
+    Returns:
+        PGVector: The LangChain PostgreSQL vector store initialized with the configured
+            database connection and embedding function.
+    """
     embeddings = get_embedding_function()
     return PGVector(
         embeddings=embeddings,
@@ -34,22 +46,33 @@ def get_vector_store() -> PGVector:
         use_jsonb=True,
     )
 
+
 def query_documents(query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-    """
-    Searches the RAG system and returns the most relevant document chunks.
+    """Searches the RAG system and returns the most relevant document chunks.
+
     Does NOT use an LLM to synthesize an answer.
+
+    Args:
+        query (str): The search query to find relevant documents for.
+        top_k (int, optional): The maximum number of document chunks to retrieve. Defaults to 5.
+
+    Returns:
+        List[Dict[str, Any]]: A list of dictionaries representing the retrieved documents.
+            Each dictionary contains 'source', 'page', and 'content' keys.
     """
     try:
         vector_store = get_vector_store()
         docs = vector_store.similarity_search(query, k=top_k)
-        
+
         sources = []
         for doc in docs:
-            sources.append({
-                "source": doc.metadata.get("source", "unknown"),
-                "page": doc.metadata.get("page", "?"),
-                "content": doc.page_content.strip()
-            })
+            sources.append(
+                {
+                    "source": doc.metadata.get("source", "unknown"),
+                    "page": doc.metadata.get("page", "?"),
+                    "content": doc.page_content.strip(),
+                }
+            )
 
         return sources
     except Exception as e:

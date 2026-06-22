@@ -23,7 +23,11 @@ class Settings(BaseSettings):
 
     @property
     def postgres_connection_string(self) -> str:
-        """Returns the SQLAlchemy connection string for PostgreSQL."""
+        """Constructs the SQLAlchemy connection string for PostgreSQL.
+
+        Returns:
+            str: The formatted PostgreSQL connection URI.
+        """
         return (
             f"postgresql+psycopg2://{self.postgres_user}:{self.postgres_password}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
