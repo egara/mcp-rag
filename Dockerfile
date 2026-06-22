@@ -30,5 +30,5 @@ USER mcpuser
 # Expose the FastAPI port
 EXPOSE 8000
 
-# Run the FastAPI server via uvicorn
-CMD ["uvicorn", "src.server:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the FastMCP SSE server via uvicorn
+CMD ["uvicorn", "src.server:mcp.sse_app", "--host", "0.0.0.0", "--port", "8000"]
