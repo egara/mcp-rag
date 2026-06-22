@@ -1,4 +1,4 @@
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 from src.rag import query_documents
 
 # Initialize the FastMCP server
@@ -31,5 +31,5 @@ async def search_documents(question: str, top_k: int = 5) -> str:
     return result_text
 
 if __name__ == "__main__":
-    # You can run this server via stdio (default) or SSE
-    mcp.run(transport='sse')
+    # You can run this server via http for OpenWebUI compatibility
+    mcp.run(transport="http", host="0.0.0.0", port=8000)
