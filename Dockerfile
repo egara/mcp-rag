@@ -1,18 +1,20 @@
-# Use a hardened Alpine base image
-FROM python:3.11-alpine3.19
+# Use a slim Debian base image (Alpine doesn't support PyTorch wheels)
+FROM python:3.11-slim
 
 # Set environment variables to avoid python writing .pyc files and running unbuffered
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Create a non-root user and group
-RUN addgroup -S mcpuser && adduser -S mcpuser -G mcpuser
+RUN groupadd -r mcpuser && useradd -r -g mcpuser mcpuser
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies needed for compiling python packages like psycopg2
-RUN apk add --no-cache gcc musl-dev postgresql-dev
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc build-essential libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
 COPY requirements.txt .
