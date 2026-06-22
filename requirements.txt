@@ -1,5 +1,3 @@
-fastapi>=0.109.2
-uvicorn>=0.27.1
 fastmcp
 langchain-core>=0.1.27
 langchain-community>=0.0.24

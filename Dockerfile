@@ -31,4 +31,4 @@ USER mcpuser
 EXPOSE 8000
 
 # Run the FastMCP server directly
-CMD ["python", "src/server.py"]
+CMD ["python", "-m", "src.server"]
