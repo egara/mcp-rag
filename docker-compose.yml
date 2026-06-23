@@ -1,7 +1,7 @@
 services:
-  postgres:
+  postgresql:
     image: pgvector/pgvector:pg16
-    container_name: localrag-pgvector
+    container_name: postgresql-pgvector
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-rag_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rag_password}
@@ -9,12 +9,27 @@ services:
     ports:
       - "0.0.0.0:${POSTGRES_PORT:-5433}:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./data/postgresql:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-rag_user}", "-d", "${POSTGRES_DB:-rag_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-volumes:
-  pgdata:
+  mcp-rag:
+    image: mcp-rag:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp-rag
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=${POSTGRES_USER:-rag_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-rag_password}
+      - POSTGRES_DB=${POSTGRES_DB:-rag_db}
+    depends_on:
+      postgresql:
+        condition: service_healthy
