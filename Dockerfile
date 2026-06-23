@@ -4,6 +4,7 @@ FROM python:3.11-slim
 # Set environment variables to avoid python writing .pyc files and running unbuffered
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV HF_HOME=/app/.cache
 
 # Create a non-root user and group
 RUN groupadd -r mcpuser && useradd -r -g mcpuser mcpuser
