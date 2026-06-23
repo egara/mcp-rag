@@ -1,14 +1,12 @@
-import logging
 from typing import Any, Dict, List
 
 from langchain_core.embeddings import Embeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_ollama import OllamaEmbeddings
 from langchain_postgres import PGVector
+from loguru import logger
 
 from src.config import settings
-
-logger = logging.getLogger(__name__)
 
 
 def get_embedding_function() -> Embeddings:
